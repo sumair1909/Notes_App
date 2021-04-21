@@ -1,9 +1,9 @@
-
-
 import 'dart:math';
 
+
+import 'database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase/firestore.dart';
+import 'objectnotes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +18,8 @@ class Notes extends StatefulWidget {
 }
 
 class _NotesState extends State<Notes> {
+  DatabaseHelper databaseHelper = DatabaseHelper();
+	List<Note> noteList;
   final ref = FirebaseFirestore.instance.collection('notes');
   List<Color> myColors = [
     Colors.yellow,
@@ -32,57 +34,77 @@ class _NotesState extends State<Notes> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar:  AppBar(backgroundColor: Colors.redAccent[700],title: Text('Outline', style: GoogleFonts.pacifico())),
-        floatingActionButton: FloatingActionButton(backgroundColor: Colors.redAccent[700],
+        appBar: AppBar(
+            backgroundColor: Colors.redAccent[700],
+            title: Text('Outline', style: GoogleFonts.pacifico(fontSize: 20))),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.redAccent[700],
           child: FaIcon(FontAwesomeIcons.plus),
           onPressed: () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddNote()));
           },
         ),
-        body:StreamBuilder(
-            stream: ref.snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: snapshot.hasData ? snapshot.data.docs.length : 0,
-                  itemBuilder: (_, index) {
-                    Random random=new Random();
-                    Color bg=myColors[random.nextInt(7)];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>EditNote(docToEdit: snapshot.data.docs[index],) ));
-                            
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        height: 150,
-                        color: bg,
-                        
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                                child: Text(snapshot.data.docs[index].data()['title'],
-                                    style: GoogleFonts.lato(fontSize: 15,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              SizedBox(height: 7),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                                child: Text(snapshot.data.docs[index].data()['content'],
-                                    style: GoogleFonts.lato(fontSize: 13,
-                                        fontWeight: FontWeight.w500)),
-                              )
-                            ]),
-                      ),
-                    );
-                  });
-            }),
+        body: Container(
+          child: StreamBuilder(
+              stream: ref.snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemCount: snapshot.hasData ? snapshot.data.docs.length : 0,
+                    itemBuilder: (_, index) {
+                      Random random = new Random();
+                      Color bg = myColors[random.nextInt(7)];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EditNote(
+                                    docToEdit: snapshot.data.docs[index],
+                                  )));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: bg,
+                              border: Border.all(width: 2, color: Colors.black),
+                              borderRadius: BorderRadius.circular(20)),
+                          margin: EdgeInsets.all(10),
+                          height: 150,
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                                  child: Text( 
+                                    snapshot.data.docs[index].data()['title'],
+                                      style: GoogleFonts.lato(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                SizedBox(height: 7),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                                  child: Text(
+                                      snapshot.data.docs[index]
+                                          .data()['content'],
+                                      style: GoogleFonts.lato(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500)),
+                                )
+                              ]),
+                        ),
+                      );
+                    });
+              }),
+        ),
       ),
     );
   }
+ 
+
 }
+ 
+

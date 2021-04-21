@@ -38,6 +38,9 @@ dependencies:
   firebase:
   cloud_firestore:
   intl:
+  sqflite: ^2.0.0+3
+  path:
+  path_provider:
 
 dev_dependencies:
   flutter_test:

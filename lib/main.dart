@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,33 +39,30 @@ class _MyAppState extends State<MyApp> {
                       end: Alignment.bottomRight,
                       colors: [Colors.green, Colors.blue])),
               child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment(0, -0.5),
-                    child: Text(
-                      "Welcome to Outline, Please Sign In To Continue",
-                      style: GoogleFonts.pacifico(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 30,
-                      ),
+                children: [SizedBox(height:15),
+                  Text(
+                    "Welcome to Outline, Please Sign In To Continue",
+                    style: GoogleFonts.pacifico(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 30,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 40, 0, 40),
+                    padding: const EdgeInsets.fromLTRB(0, 55, 0, 55),
                     child: Image.asset('assets/notes.jpg',
                         height: 300, width: 250),
                   ),
                   SizedBox(
                     height: 50,
-                    width: 270,
+                    width: 250,
                     child: ElevatedButton(
                         onPressed: () {
                           _signInWithGoogle();
                         },
                         child: Row(children: [
                           FaIcon(FontAwesomeIcons.google),
-                          SizedBox(width: 40),
+                          SizedBox(width: 10),
                           Text("Sign In With Google",
                               style: GoogleFonts.lato(fontSize: 20))
                         ]),style: ElevatedButton.styleFrom(
@@ -89,6 +84,7 @@ class _MyAppState extends State<MyApp> {
         await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    // ignore: unused_local_variable
     final User user =
         (await firebaseAuth.signInWithCredential(credential)).user;
 
